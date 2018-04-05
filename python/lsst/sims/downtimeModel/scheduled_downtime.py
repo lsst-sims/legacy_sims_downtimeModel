@@ -67,3 +67,7 @@ class ScheduledDowntime(object):
             for row in cur:
                 self.downtimes.append((row[0], row[1], row[2]))
             cur.close()
+
+    def get_downtimes(self, index):
+
+        return self.downtimes[index]
