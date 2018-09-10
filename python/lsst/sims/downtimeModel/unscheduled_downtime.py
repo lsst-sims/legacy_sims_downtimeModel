@@ -3,6 +3,9 @@ import logging
 import random
 import time
 
+__all__ = ['UnscheduledDowntime']
+
+
 class UnscheduledDowntime(object):
     """Handle creating the unscheduled downtime information.
 
@@ -107,9 +110,8 @@ class UnscheduledDowntime(object):
                         prob = random.random()
                         if prob < self.MINOR_EVENT[0]:
                             self.downtimes.append((nights, self.MINOR_EVENT[1], self.MINOR_EVENT[2]))
-            nights += 1
-            
-        # 15 = WORDY logging level    
-        self.log.log(15,
-                     "Total unscheduled downtime: {} days in {} days.".format(self.total_downtime,
-                                                                              survey_length))
+        nights += 1
+
+        # 15 = WORDY logging level
+        self.log.log(15, "Total unscheduled downtime: {} days in {} days.".format(self.total_downtime,
+                                                                                  survey_length))
