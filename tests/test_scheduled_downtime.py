@@ -1,15 +1,15 @@
-import logging
 import os
 import sqlite3
 import unittest
+import lsst.utils.tests
 
 from lsst.sims.downtimeModel import ScheduledDowntime
+
 
 class ScheduledDowntimeTest(unittest.TestCase):
 
     def setUp(self):
         self.sdt = ScheduledDowntime()
-        logging.getLogger().setLevel(logging.WARN)
 
     def check_downtime(self, downtime, night, duration, activity):
         self.assertEqual(downtime[0], night)
@@ -22,7 +22,7 @@ class ScheduledDowntimeTest(unittest.TestCase):
 
     def test_information_after_initialization(self):
         self.sdt.initialize()
-        self.assertEquals(os.path.basename(self.sdt.downtime_file), "scheduled_downtime.db")
+        self.assertEqual(os.path.basename(self.sdt.downtime_file), "scheduled_downtime.db")
         self.assertEqual(len(self.sdt), 31)
         self.check_downtime(self.sdt.downtimes[0], 158, 7, "general maintenance")
         self.check_downtime(self.sdt.downtimes[-1], 7242, 7, "general maintenance")
@@ -52,3 +52,16 @@ class ScheduledDowntimeTest(unittest.TestCase):
         self.sdt.initialize()
         self.check_downtime(self.sdt(), 158, 7, "general maintenance")
         self.assertEqual(len(self.sdt), 30)
+
+
+class TestMemory(lsst.utils.tests.MemoryTestCase):
+    pass
+
+
+def setup_module(module):
+    lsst.utils.tests.init()
+
+
+if __name__ == "__main__":
+    lsst.utils.tests.init()
+    unittest.main()

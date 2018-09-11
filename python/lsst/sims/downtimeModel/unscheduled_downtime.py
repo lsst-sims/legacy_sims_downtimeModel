@@ -1,6 +1,6 @@
 from builtins import object
 import logging
-import random
+import numpy as np
 import time
 
 __all__ = ['UnscheduledDowntime']
@@ -11,16 +11,25 @@ class UnscheduledDowntime(object):
 
     This class handles the unscheduled downtime information.
     """
-
-    MINOR_EVENT = (0.0137, 1, "minor event")
-    INTERMEDIATE_EVENT = (0.00548, 3, "intermediate event")
-    MAJOR_EVENT = (0.00137, 7, "major event")
-    CATASTROPHIC_EVENT = (0.000274, 14, "catastrophic event")
+    MINOR_EVENT = {'probability': 0.0137,
+                   'length': 1,
+                   'comment': 'minor event'}
+    INTERMEDIATE_EVENT = {'probability': 0.00548,
+                          'length': 3,
+                          'comment': 'intermediate event'}
+    MAJOR_EVENT = {'probability': 0.00137,
+                   'length': 7,
+                   'comment': 'major event'}
+    CATASTROPHIC_EVENT = {'probability': 0.000274,
+                          'length': 14,
+                          'comment': 'catastrophic event'}
 
     def __init__(self):
         """Initialize the class.
         """
-        self.seed = 1516231120
+        # Choose random, repeatable, seed for random number generation.
+        # This can be overriden in the 'initialize' step.
+        self.seed = 1516231121
         self.downtimes = []
         self.log = logging.getLogger("downtime.UnscheduledDowntime")
 
@@ -84,33 +93,36 @@ class UnscheduledDowntime(object):
             else:
                 self.seed = random_seed
 
-        random.seed(self.seed)
+        rng = np.random.RandomState(self.seed)
 
-        nights = 0
-        while nights < survey_length:
-            prob = random.random()
-            if prob < self.CATASTROPHIC_EVENT[0]:
-                self.downtimes.append((nights, self.CATASTROPHIC_EVENT[1], self.CATASTROPHIC_EVENT[2]))
-                nights += self.CATASTROPHIC_EVENT[1] + 1
-                continue
+        night = 0
+        while night < survey_length:
+            prob = rng.random_sample()
+            if prob < self.CATASTROPHIC_EVENT['probability']:
+                self.downtimes.append((night, self.CATASTROPHIC_EVENT['length'],
+                                       self.CATASTROPHIC_EVENT['comment']))
+                night += self.CATASTROPHIC_EVENT['length'] + 1
             else:
-                prob = random.random()
-                if prob < self.MAJOR_EVENT[0]:
-                    self.downtimes.append((nights, self.MAJOR_EVENT[1], self.MAJOR_EVENT[2]))
-                    nights += self.MAJOR_EVENT[1] + 1
-                    continue
+                # Pick a new random number, and check again.
+                prob = rng.random_sample()
+                if prob < self.MAJOR_EVENT['probability']:
+                    self.downtimes.append((night, self.MAJOR_EVENT['length'],
+                                       self.MAJOR_EVENT['comment']))
+                    night += self.MAJOR_EVENT['length'] + 1
                 else:
-                    prob = random.random()
-                    if prob < self.INTERMEDIATE_EVENT[0]:
-                        self.downtimes.append((nights, self.INTERMEDIATE_EVENT[1],
-                                               self.INTERMEDIATE_EVENT[2]))
-                        nights += self.INTERMEDIATE_EVENT[1] + 1
-                        continue
+                    prob = rng.random_sample()
+                    if prob < self.INTERMEDIATE_EVENT['probability']:
+                        self.downtimes.append((night, self.INTERMEDIATE_EVENT['length'],
+                                       self.INTERMEDIATE_EVENT['comment']))
+                        night += self.INTERMEDIATE_EVENT['length'] + 1
                     else:
-                        prob = random.random()
-                        if prob < self.MINOR_EVENT[0]:
-                            self.downtimes.append((nights, self.MINOR_EVENT[1], self.MINOR_EVENT[2]))
-        nights += 1
+                        prob = rng.random_sample()
+                        if prob < self.MINOR_EVENT['probability']:
+                            self.downtimes.append((night, self.MINOR_EVENT['length'],
+                                       self.MINOR_EVENT['comment']))
+                            night += self.MINOR_EVENT['length'] + 1
+                        else:
+                            night += 1
 
         # 15 = WORDY logging level
         self.log.log(15, "Total unscheduled downtime: {} days in {} days.".format(self.total_downtime,
