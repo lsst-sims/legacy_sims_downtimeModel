@@ -1,6 +1,10 @@
 from builtins import object
-import pkg_resources
+import os
 import sqlite3
+from lsst.utils import getPackageDir
+
+__all__ = ['ScheduledDowntime']
+
 
 class ScheduledDowntime(object):
     """Handle the scheduled downtime information.
@@ -8,7 +12,7 @@ class ScheduledDowntime(object):
     This class handles the scheduled downtime information.
     """
 
-    SCHEDULED_DOWNTIME_DB = "scheduled_downtime.db"
+    SCHEDULED_DOWNTIME_DB = os.path.join(getPackageDir('sims_downtimeModel'), "data", "scheduled_downtime.db")
 
     def __init__(self):
         """Initialize the class.
@@ -57,9 +61,7 @@ class ScheduledDowntime(object):
         if downtime_file != "":
             self.downtime_file = downtime_file
         else:
-            rsman = pkg_resources.ResourceManager()
-            self.downtime_file = rsman.resource_filename("lsst.sims.downtimeModel",
-                                                         "/{}".format(self.SCHEDULED_DOWNTIME_DB))
+            self.downtime_file = self.SCHEDULED_DOWNTIME_DB
 
         with sqlite3.connect(self.downtime_file) as conn:
             cur = conn.cursor()
