@@ -19,7 +19,6 @@ class ScheduledDowntimeDataTest(unittest.TestCase):
     def test_basic_information_after_creation(self):
         downtimeData = ScheduledDowntimeData(self.th, start_of_night_offset=self.startofnight)
         self.assertEqual(downtimeData.scheduled_downtime_db, self.downtime_db)
-        self.assertIsNone(downtimeData.downtime)
         self.assertEqual(self.th + TimeDelta(self.startofnight, format='jd'), downtimeData.night0)
         downtimeData = ScheduledDowntimeData(self.th, start_of_night_offset=0)
         self.assertEqual(downtimeData.night0, self.th)

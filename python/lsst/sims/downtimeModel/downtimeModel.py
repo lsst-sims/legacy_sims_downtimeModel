@@ -67,11 +67,6 @@ class DowntimeModel(object):
     def __call__(self, efdData, targetDict):
         """Calculate the sky coverage due to clouds.
 
-        This is where we'd plug in Peter's cloud transparency maps and predictions.
-        We could also try translating cloud transparency into a cloud extinction.
-        For now, we're simply returning the cloud coverage that we already got from the database,
-        but multiplied over the whole sky to provide a map.
-
         Parameters
         ----------
         efdData: dict

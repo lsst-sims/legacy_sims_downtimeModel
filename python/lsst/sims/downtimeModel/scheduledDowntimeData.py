@@ -40,6 +40,7 @@ class ScheduledDowntimeData(object):
 
         # Scheduled downtime data is a np.ndarray of start / end / activity for each scheduled downtime.
         self.downtime = None
+        self.read_data()
 
     def __call__(self):
         """Return the current (if any) and any future scheduled downtimes.
@@ -114,7 +115,7 @@ class ScheduledDowntimeData(object):
         config_info = OrderedDict()
         config_info['Survey start'] = self.night0.isot
         config_info['Last scheduled downtime ends'] = self.downtime['end'][-1].isot
-        config_info['Total scheduled downtime'] = self.total_downtime()
+        config_info['Total scheduled downtime (days)'] = self.total_downtime()
         config_info['Scheduled Downtimes'] = self.downtime
         return config_info
 

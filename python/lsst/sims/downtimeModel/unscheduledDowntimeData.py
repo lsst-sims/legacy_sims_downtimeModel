@@ -38,6 +38,7 @@ class UnscheduledDowntimeData(object):
 
         # Scheduled downtime data is a np.ndarray of start / end / activity for each scheduled downtime.
         self.downtime = None
+        self.make_data()
 
     def __call__(self):
         """Return the array of unscheduled downtimes.
@@ -143,7 +144,7 @@ class UnscheduledDowntimeData(object):
         config_info = OrderedDict()
         config_info['Survey start'] = self.night0.isot
         config_info['Survey end'] = (self.night0 + TimeDelta(self.survey_length)).isot
-        config_info['Total unscheduled downtime'] = self.total_downtime()
+        config_info['Total unscheduled downtime (days)'] = self.total_downtime()
         config_info['Random seed'] = self.seed
         config_info['Unscheduled Downtimes'] = self.downtime
         return config_info

@@ -16,7 +16,6 @@ class UnscheduledDowntimeDataTest(unittest.TestCase):
     def test_basic_information_after_creation(self):
         downtimeData = UnscheduledDowntimeData(self.th, start_of_night_offset=self.startofnight,
                                                survey_length=self.survey_length, seed=self.seed)
-        self.assertIsNone(downtimeData.downtime)
         self.assertEqual(downtimeData.seed, self.seed)
         self.assertEqual(downtimeData.survey_length, self.survey_length)
         self.assertEqual(self.th + TimeDelta(self.startofnight, format='jd'), downtimeData.night0)
