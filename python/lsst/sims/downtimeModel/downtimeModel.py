@@ -26,13 +26,13 @@ class DowntimeModel(object):
     processed telemetry values.
     """
     def __init__(self, config=None):
-        self._configure(config=config)
+        self.configure(config=config)
         self.efd_requirements = (self._config.efd_columns, self._config.efd_delta_time)
         self.schedDown = self._config.efd_columns[0]
         self.unschedDown = self._config.efd_columns[1]
         self.target_requirements = self._config.target_columns
 
-    def _configure(self, config=None):
+    def configure(self, config=None):
         """Configure the model. After 'configure' the model config will be frozen.
 
         Parameters
