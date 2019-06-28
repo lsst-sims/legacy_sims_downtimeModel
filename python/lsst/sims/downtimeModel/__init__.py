@@ -1,3 +1,5 @@
 from .version import *
-from .scheduled_downtime import *
-from .unscheduled_downtime import *
+from .downtimeModel import *
+from .downtimeModelConfig import *
+from .scheduledDowntimeData import *
+from .unscheduledDowntimeData import *
