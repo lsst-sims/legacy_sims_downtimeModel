@@ -26,6 +26,7 @@ class DowntimeModel(object):
     processed telemetry values.
     """
     def __init__(self, config=None):
+        self._config = None
         self.configure(config=config)
         self.efd_requirements = (self._config.efd_columns, self._config.efd_delta_time)
         self.schedDown = self._config.efd_columns[0]
@@ -43,10 +44,15 @@ class DowntimeModel(object):
         """
         if config is None:
             self._config = DowntimeModelConfig()
-        else:
-            if not isinstance(config, DowntimeModelConfig):
-                raise ValueError('Must use a DowntimeModelConfig.')
+        elif isinstance(config, dict):
+            self._config = DowntimeModelConfig()
+            for key in config:
+                setattr(self._config, key, config[key])
+        elif isinstance(config, DowntimeModelConfig):
             self._config = config
+        else:
+            raise RuntimeError(f'Expecting `None`, dictionary or `DowntimeModelConfig`, '
+                               f'got {type(config)}: {config!r}.')
         self._config.validate()
         self._config.freeze()
 
