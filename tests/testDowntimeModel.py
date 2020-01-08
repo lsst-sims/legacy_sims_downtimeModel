@@ -23,7 +23,7 @@ class TestDowntimeModel(unittest.TestCase):
         downtimeModel = DowntimeModel(self.config)
         self.assertEqual(downtimeModel._config, self.config)
         # Test specifying an incorrect config.
-        self.assertRaises(ValueError, DowntimeModel, 0.8)
+        self.assertRaises(RuntimeError, DowntimeModel, 0.8)
 
     def test_status(self):
         downtimeModel = DowntimeModel()
